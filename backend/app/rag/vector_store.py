@@ -8,6 +8,8 @@ from app.core.config import (
     METADATA_PATH
 )
 
+from app.rag.embeddings import generate_embedding
+
 dimension = 768
 
 metadata_store = []
@@ -56,3 +58,45 @@ def search_vectorstore(query_embedding, top_k=10):
             results.append(metadata_store[idx])
 
     return results
+
+
+
+# def rebuild_vectorstore(new_metadata_store):
+
+#     global index
+#     global metadata_store
+
+#     metadata_store = new_metadata_store
+
+#     if not metadata_store:
+
+#         index = None
+
+#         if os.path.exists(VECTOR_PATH):
+#             os.remove(VECTOR_PATH)
+
+#         save_vectorstore()
+
+#         return
+
+#     first_embedding = generate_embedding(
+#         metadata_store[0]["text"]
+#     )
+
+#     vector_dim = len(first_embedding)
+
+#     index = faiss.IndexFlatL2(vector_dim)
+
+#     for item in metadata_store:
+
+#         embedding = generate_embedding(
+#             item["text"]
+#         )
+
+#         vector = np.array(
+#             [embedding]
+#         ).astype("float32")
+
+#         index.add(vector)
+
+#     save_vectorstore()

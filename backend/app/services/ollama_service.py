@@ -20,3 +20,25 @@ def generate_response(prompt: str):
     )
 
     return response["message"]["content"]
+
+
+def stream_response(prompt: str):
+
+    model_name = get_current_model()
+
+    stream = ollama.chat(
+        model=model_name,
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        stream=True
+    )
+
+    for chunk in stream:
+
+        content = chunk["message"]["content"]
+
+        yield content
