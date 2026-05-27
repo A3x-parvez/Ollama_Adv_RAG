@@ -40,3 +40,16 @@ async def stream_chat(request: ChatRequest):
         generator,
         media_type="text/plain"
     )
+
+@router.post("/debug")
+async def debug_chat(request: ChatRequest):
+
+    from app.rag.hybrid_search import hybrid_search
+
+    results = hybrid_search(
+        request.query
+    )
+
+    return {
+        "retrieved_chunks": results
+    }

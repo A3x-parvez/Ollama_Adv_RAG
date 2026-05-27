@@ -1,6 +1,7 @@
 from FlagEmbedding import FlagReranker
 
 from app.core.constants import RERANK_TOP_K
+from app.core.runtime_settings import settings
 
 
 # Load reranker model once
@@ -46,7 +47,8 @@ def rerank_documents(query, documents):
     # Keep top reranked docs
     reranked_docs = [
         item[0]
-        for item in scored_docs[:RERANK_TOP_K]
+        # for item in scored_docs[:RERANK_TOP_K]
+        for item in scored_docs[:settings["rerank_top_k"]]
     ]
 
     return reranked_docs

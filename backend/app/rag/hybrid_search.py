@@ -5,17 +5,25 @@ from app.rag.reranker import rerank_documents
 
 from app.rag.vector_store import metadata_store
 
-from app.core.constants import TOP_K
+from app.core.runtime_settings import settings
 
 
-def bm25_search(query: str, top_k=TOP_K):
+# Global BM25 cache
+bm25_index = None
 
-    """
-    Keyword-based retrieval using BM25
-    """
+
+# -----------------------------------
+# Build BM25 Index
+# -----------------------------------
+def build_bm25_index():
+
+    global bm25_index
 
     if not metadata_store:
-        return []
+
+        bm25_index = None
+
+        return
 
     documents = [
         item["text"]
@@ -27,11 +35,40 @@ def bm25_search(query: str, top_k=TOP_K):
         for doc in documents
     ]
 
-    bm25 = BM25Okapi(tokenized_docs)
+    bm25_index = BM25Okapi(
+        tokenized_docs
+    )
+
+
+# -----------------------------------
+# BM25 Keyword Search
+# -----------------------------------
+def bm25_search(query: str, top_k=None):
+
+    """
+    Keyword-based retrieval using BM25
+    """
+
+    global bm25_index
+
+    if top_k is None:
+
+        top_k = settings["top_k"]
+
+    if not metadata_store:
+
+        return []
+
+    # Lazy build cache
+    if bm25_index is None:
+
+        build_bm25_index()
 
     tokenized_query = query.lower().split()
 
-    scores = bm25.get_scores(tokenized_query)
+    scores = bm25_index.get_scores(
+        tokenized_query
+    )
 
     scored_docs = list(
         zip(metadata_store, scores)
@@ -50,7 +87,13 @@ def bm25_search(query: str, top_k=TOP_K):
     return results
 
 
-def merge_results(dense_results, keyword_results):
+# -----------------------------------
+# Merge Dense + BM25 Results
+# -----------------------------------
+def merge_results(
+    dense_results,
+    keyword_results
+):
 
     """
     Merge and deduplicate results
@@ -73,19 +116,27 @@ def merge_results(dense_results, keyword_results):
     return merged
 
 
+# -----------------------------------
+# Hybrid Retrieval Pipeline
+# -----------------------------------
 def hybrid_search(query: str):
 
     """
     Hybrid retrieval:
-    - Dense vector search
-    - BM25 keyword search
+    - Dense semantic retrieval
+    - BM25 keyword retrieval
+    - AI reranking
     """
 
     # Dense semantic retrieval
-    dense_results = retrieve_documents(query)
+    dense_results = retrieve_documents(
+        query
+    )
 
     # BM25 keyword retrieval
-    keyword_results = bm25_search(query)
+    keyword_results = bm25_search(
+        query
+    )
 
     # Merge results
     merged_results = merge_results(

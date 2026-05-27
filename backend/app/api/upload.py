@@ -10,6 +10,10 @@ from app.rag.chunking import create_chunks
 from app.rag.embeddings import generate_embedding
 from app.rag.vector_store import add_to_vectorstore
 
+from app.rag.hybrid_search import (
+    build_bm25_index
+)
+
 router = APIRouter(
     prefix="/upload",
     tags=["Upload"]
@@ -47,9 +51,13 @@ async def upload_pdf(file: UploadFile = File(...)):
             embedding,
             {
                 "text": chunk["text"],
+                "embedding": embedding,
                 "metadata": chunk["metadata"]
             }
         )
+
+    # Rebuild BM25 cache AFTER upload completes
+    build_bm25_index()
 
     return {
         "message": "PDF processed successfully",

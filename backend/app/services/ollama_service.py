@@ -3,7 +3,7 @@ import ollama
 from app.services.model_service import (
     get_current_model
 )
-
+from app.core.runtime_settings import settings
 
 def generate_response(prompt: str):
 
@@ -16,7 +16,11 @@ def generate_response(prompt: str):
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        options={
+        "temperature": settings["temperature"],
+        "num_predict": settings["max_tokens"]
+        }
     )
 
     return response["message"]["content"]
@@ -34,7 +38,11 @@ def stream_response(prompt: str):
                 "content": prompt
             }
         ],
-        stream=True
+        stream=True,
+        options={
+        "temperature": settings["temperature"],
+        "num_predict": settings["max_tokens"]
+        }
     )
 
     for chunk in stream:
