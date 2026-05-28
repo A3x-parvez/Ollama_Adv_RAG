@@ -7,7 +7,7 @@ sse-starlette
 pydantic
 python-dotenv
 
-pymupdf
+PyMuPDF
 
 faiss-cpu
 numpy
@@ -24,7 +24,7 @@ aiofiles
 FlagEmbedding
 torch
 transformers
-re
+sympy
 
-psutil
+gputil
 GPUtil

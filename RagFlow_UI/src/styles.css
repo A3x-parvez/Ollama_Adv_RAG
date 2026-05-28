@@ -1,0 +1,193 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-violet: var(--violet);
+  --color-cyan: var(--cyan);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.75rem;
+  /* zinc-950 base, futuristic dark */
+  --background: oklch(0.145 0.005 285);
+  --foreground: oklch(0.96 0.005 285);
+  --card: oklch(0.18 0.008 285 / 60%);
+  --card-foreground: oklch(0.96 0.005 285);
+  --popover: oklch(0.18 0.008 285);
+  --popover-foreground: oklch(0.96 0.005 285);
+  /* violet-500 */
+  --primary: oklch(0.62 0.22 295);
+  --primary-foreground: oklch(0.99 0 0);
+  --violet: oklch(0.62 0.22 295);
+  /* cyan-400 */
+  --cyan: oklch(0.82 0.15 210);
+  --secondary: oklch(0.22 0.01 285);
+  --secondary-foreground: oklch(0.96 0.005 285);
+  --muted: oklch(0.22 0.01 285);
+  --muted-foreground: oklch(0.65 0.01 285);
+  --accent: oklch(0.25 0.02 285);
+  --accent-foreground: oklch(0.96 0.005 285);
+  --destructive: oklch(0.62 0.23 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 8%);
+  --ring: oklch(0.62 0.22 295 / 60%);
+  --sidebar: oklch(0.16 0.006 285 / 80%);
+  --sidebar-foreground: oklch(0.96 0.005 285);
+  --sidebar-primary: oklch(0.62 0.22 295);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.22 0.01 285);
+  --sidebar-accent-foreground: oklch(0.96 0.005 285);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.62 0.22 295 / 60%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html, body { background: var(--color-background); color: var(--color-foreground); }
+  body {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, oklch(0.62 0.22 295 / 0.10), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, oklch(0.82 0.15 210 / 0.08), transparent 60%),
+      linear-gradient(to bottom, oklch(0.145 0.005 285), oklch(0.13 0.005 285));
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: oklch(0.20 0.01 285 / 0.55);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid oklch(1 0 0 / 0.08);
+  }
+  .glass-strong {
+    background: oklch(0.18 0.01 285 / 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid oklch(1 0 0 / 0.10);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(oklch(1 0 0 / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-violet { box-shadow: 0 0 40px -10px oklch(0.62 0.22 295 / 0.5); }
+  .glow-cyan { box-shadow: 0 0 40px -10px oklch(0.82 0.15 210 / 0.4); }
+  .text-gradient {
+    background: linear-gradient(135deg, oklch(0.82 0.15 210), oklch(0.62 0.22 295));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 0.08);
+    border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: oklch(1 0 0 / 0.15); }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.06), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+}
+
+/* Chat bubble and typography polish */
+.chat-bubble {
+  border-radius: calc(var(--radius) + 6px);
+  padding: 0.75rem 1rem;
+  line-height: 1.6;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.chat-bubble:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.45); }
+.assistant-bubble { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+.user-bubble { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008)); border: 1px solid rgba(255,255,255,0.03); }
+
+.chat-meta { display:flex; gap:0.6rem; align-items:center; font-size:0.75rem; color:var(--muted-foreground); }
+.chat-meta .model-pill { background: rgba(255,255,255,0.02); padding:0.15rem 0.5rem; border-radius:999px; font-family:inherit; font-size:0.72rem; color:var(--muted-foreground); border:1px solid rgba(255,255,255,0.03); }
+.chat-meta .response-time { color:var(--muted-foreground); opacity:0.85; }
+.chat-meta button.copy { background:transparent; border:0; padding:0.15rem; display:inline-flex; align-items:center; gap:0.4rem; color:var(--muted-foreground); }
+
+/* Typing cursor */
+.typing-cursor {
+  display:inline-block;
+  width:10px;
+  height:1.1em;
+  margin-left:6px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  border-radius:2px;
+  animation: blink-cursor 1s steps(2, start) infinite;
+  vertical-align:text-bottom;
+}
+@keyframes blink-cursor { 0% { opacity:1 } 50% { opacity:0 } 100% { opacity:1 } }
+
+/* Fade-in message */
+.msg-fade-enter { opacity: 0; transform: translateY(6px); }
+.msg-fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 260ms ease, transform 260ms ease; }
+
+/* Markdown tweaks */
+.prose-custom p { margin-bottom: 0.7rem; line-height: 1.72; }
+.prose-custom h1, .prose-custom h2, .prose-custom h3 { color: var(--color-foreground); margin-top: 0.9rem; margin-bottom: 0.5rem; }
+.prose-custom ul, .prose-custom ol { margin-left: 1rem; margin-bottom: 0.8rem; }
+.prose-custom code { background: rgba(255,255,255,0.03); padding: 0.12rem 0.28rem; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Noto Mono", monospace; font-size:0.9em; }
+.prose-custom table { width:100%; border-collapse: collapse; margin-bottom:0.8rem; }
+.prose-custom th, .prose-custom td { border: 1px solid rgba(255,255,255,0.04); padding: 0.5rem 0.6rem; }
+.prose-custom thead th { background: rgba(255,255,255,0.02); }
+
+/* Prevent outer page scroll when interacting with inner scrollable areas */
+.no-outer-scroll { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
