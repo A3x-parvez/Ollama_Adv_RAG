@@ -24,3 +24,7 @@ aiofiles
 FlagEmbedding
 torch
 transformers
+re
+
+psutil
+GPUtil

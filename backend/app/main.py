@@ -8,6 +8,7 @@ from app.api.models import router as model_router
 from app.api.documents import router as documents_router
 from app.api.settings import router as settings_router
 from app.api.health import router as health_router
+from app.api.system import router as system_router
 
 app = FastAPI(
     title="Advanced Offline RAG",
@@ -29,6 +30,7 @@ app.include_router(model_router)
 app.include_router(documents_router)
 app.include_router(settings_router)
 app.include_router(health_router)
+app.include_router(system_router)
 
 @app.get("/")
 async def root():
