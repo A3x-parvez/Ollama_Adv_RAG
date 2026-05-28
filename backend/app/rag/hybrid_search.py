@@ -1,4 +1,5 @@
 from rank_bm25 import BM25Okapi
+from sympy import re
 
 from app.rag.retriever import retrieve_documents
 from app.rag.reranker import rerank_documents
@@ -6,7 +7,7 @@ from app.rag.reranker import rerank_documents
 from app.rag.vector_store import metadata_store
 
 from app.core.runtime_settings import settings
-
+import re
 
 # Global BM25 cache
 bm25_index = None
@@ -34,7 +35,8 @@ def build_bm25_index():
         ]
 
         tokenized_docs = [
-            doc.lower().split()
+            # doc.lower().split()
+            re.findall(r"\w+", doc.lower())
             for doc in documents
         ]
 
@@ -74,7 +76,11 @@ def bm25_search(query: str, top_k=None):
 
             return []
 
-        tokenized_query = query.lower().split()
+        # tokenized_query = query.lower().split()
+        tokenized_query = re.findall(
+            r"\w+",
+            query.lower()
+        )
 
         scores = bm25_index.get_scores(
             tokenized_query
