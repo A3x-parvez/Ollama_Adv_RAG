@@ -59,7 +59,26 @@ async def upload_pdf(file: UploadFile = File(...)):
     # Rebuild BM25 cache AFTER upload completes
     build_bm25_index()
 
+    # Return updated documents and stats for frontend
+    from app.rag.vector_store import metadata_store as _metadata
+
+    documents = set()
+
+    for item in _metadata:
+
+        documents.add(item["metadata"]["source"])
+
+    stats = {}
+
+    for item in _metadata:
+
+        source = item["metadata"]["source"]
+
+        stats[source] = stats.get(source, 0) + 1
+
     return {
         "message": "PDF processed successfully",
-        "chunks": len(chunks)
+        "chunks": len(chunks),
+        "documents": list(documents),
+        "stats": stats
     }

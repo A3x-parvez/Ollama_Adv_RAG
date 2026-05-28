@@ -10,6 +10,7 @@ from app.core.runtime_settings import settings
 
 # Global BM25 cache
 bm25_index = None
+_bm25_lock = __import__("threading").RLock()
 
 
 # -----------------------------------
@@ -19,25 +20,27 @@ def build_bm25_index():
 
     global bm25_index
 
-    if not metadata_store:
+    with _bm25_lock:
 
-        bm25_index = None
+        if not metadata_store:
 
-        return
+            bm25_index = None
 
-    documents = [
-        item["text"]
-        for item in metadata_store
-    ]
+            return
 
-    tokenized_docs = [
-        doc.lower().split()
-        for doc in documents
-    ]
+        documents = [
+            item["text"]
+            for item in metadata_store
+        ]
 
-    bm25_index = BM25Okapi(
-        tokenized_docs
-    )
+        tokenized_docs = [
+            doc.lower().split()
+            for doc in documents
+        ]
+
+        bm25_index = BM25Okapi(
+            tokenized_docs
+        )
 
 
 # -----------------------------------
@@ -59,32 +62,39 @@ def bm25_search(query: str, top_k=None):
 
         return []
 
-    # Lazy build cache
-    if bm25_index is None:
+    # Lazy build cache with lock
+    with _bm25_lock:
 
-        build_bm25_index()
+        if bm25_index is None:
 
-    tokenized_query = query.lower().split()
+            build_bm25_index()
 
-    scores = bm25_index.get_scores(
-        tokenized_query
-    )
+        # If still None after build, return empty
+        if bm25_index is None:
 
-    scored_docs = list(
-        zip(metadata_store, scores)
-    )
+            return []
 
-    scored_docs.sort(
-        key=lambda x: x[1],
-        reverse=True
-    )
+        tokenized_query = query.lower().split()
 
-    results = [
-        item[0]
-        for item in scored_docs[:top_k]
-    ]
+        scores = bm25_index.get_scores(
+            tokenized_query
+        )
 
-    return results
+        scored_docs = list(
+            zip(metadata_store, scores)
+        )
+
+        scored_docs.sort(
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        results = [
+            item[0]
+            for item in scored_docs[:top_k]
+        ]
+
+        return results
 
 
 # -----------------------------------

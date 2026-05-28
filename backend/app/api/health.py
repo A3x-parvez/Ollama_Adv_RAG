@@ -4,9 +4,7 @@ from app.services.model_service import (
     get_current_model
 )
 
-from app.rag.vector_store import (
-    metadata_store
-)
+# import metadata_store at request time to avoid stale bindings
 
 router = APIRouter(
     prefix="/health",
@@ -17,8 +15,10 @@ router = APIRouter(
 @router.get("/")
 async def health():
 
+    from app.rag.vector_store import metadata_store as _metadata
+
     return {
         "status": "healthy",
         "current_model": get_current_model(),
-        "total_chunks": len(metadata_store)
+        "total_chunks": len(_metadata)
     }
