@@ -43,18 +43,47 @@ def initialize_index(vector_dim):
 # -----------------------------
 # Save Vector DB
 # -----------------------------
+# def save_vectorstore():
+
+#     global index
+
+#     if index is not None:
+
+#         faiss.write_index(index, VECTOR_PATH)
+
+#     with open(METADATA_PATH, "wb") as f:
+
+#         pickle.dump(metadata_store, f)
+
 def save_vectorstore():
 
     global index
 
+    # Save or remove FAISS index
     if index is not None:
 
-        faiss.write_index(index, VECTOR_PATH)
+        faiss.write_index(
+            index,
+            VECTOR_PATH
+        )
 
-    with open(METADATA_PATH, "wb") as f:
+    elif os.path.exists(VECTOR_PATH):
 
-        pickle.dump(metadata_store, f)
+        os.remove(VECTOR_PATH)
 
+    # Save or remove metadata
+    if metadata_store:
+
+        with open(METADATA_PATH, "wb") as f:
+
+            pickle.dump(
+                metadata_store,
+                f
+            )
+
+    elif os.path.exists(METADATA_PATH):
+
+        os.remove(METADATA_PATH)
 
 # -----------------------------
 # Add Embedding
