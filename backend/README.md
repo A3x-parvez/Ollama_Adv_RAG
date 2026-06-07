@@ -80,6 +80,56 @@ uvicorn app.main:app --reload --port 8000
 Open http://127.0.0.1:8000/docs for automatic Swagger UI (FastAPI).
 
 **Project Structure**
+```bash
+backend/
+│
+├── app/
+│   │
+│   ├── api/
+│   │   ├── chat.py
+│   │   ├── upload.py
+│   │   ├── session.py
+│   |   ├── documents.py
+│   ├   ├── health.py
+│   ├   ├── models.py
+│   ├   ├── settings.py
+│   ├   └── system.py
+│   ├
+│   │
+│   ├── rag/
+│   │   ├── chunking.py
+│   │   ├── embeddings.py
+│   │   ├── retriever.py
+│   │   ├── reranker.py
+│   │   ├── vector_store.py
+│   │   ├── hybrid_search.py
+│   │   └── pipeline.py
+│   │
+│   ├── services/
+│   │   ├── ollama_service.py
+│   │   ├── model_service.py   
+│   │   ├── pdf_service.py
+│   │   └── session_service.py
+│   │
+│   ├── storage/
+│   │   ├── uploads/
+│   │   ├── vectors/
+│   │   ├── cache/
+│   │   └── sessions/
+│   │
+│   ├── core/
+│   │   ├── config.py
+│   │   |── constants.py
+│   │   └── runtime_settings.py
+│   │
+│   └── main.py
+│
+├── requirements.txt
+└── .env
+```
+- **Files and directories:**
+
+
 - **app/**: FastAPI application and routers
   - **main.py**: application bootstrap and router registration ([app/main.py](app/main.py))
   - **api/**: HTTP route handlers
