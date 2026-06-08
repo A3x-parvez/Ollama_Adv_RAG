@@ -18,7 +18,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
 
-## **Private • Offline • Multi-Model • Streaming • Hybrid Retrieval**
+### **Private • Offline • Multi-Model • Streaming • Hybrid Retrieval**
 
 </div>
 
@@ -38,7 +38,21 @@ Build privacy-first AI applications using local Ollama models, hybrid retrieval 
 
 </div>
 
-## Architecture Overview
+---
+
+## Screenshots
+
+### Main Chat Interface
+
+Modern streaming AI chat experience with markdown rendering, citations, and dynamic model selection.
+
+<p align="center">
+  <img src="asset/ui_demo.png" alt="RagFlow Chat Interface" width="900"/>
+</p>
+
+---
+
+## **Architecture Overview**
 
 | Component | Technology | Responsibilities |
 |------------|------------|------------------|
@@ -49,6 +63,7 @@ Build privacy-first AI applications using local Ollama models, hybrid retrieval 
 | **Knowledge Base** | PDF Documents + Embeddings | Stores indexed document chunks and embeddings for semantic retrieval. |
 
 ---
+
 
 ## Backend Workflow
 
@@ -90,7 +105,7 @@ Build privacy-first AI applications using local Ollama models, hybrid retrieval 
 
 ---
 
-## Features
+## **Features**
 
 - **Offline-First RAG Platform** — Designed for private and secure document intelligence using locally hosted Ollama models.
 - **Hybrid Retrieval Pipeline** — Combines FAISS vector search, BM25 keyword retrieval, semantic embeddings, and AI reranking for improved retrieval accuracy.
@@ -105,6 +120,44 @@ Build privacy-first AI applications using local Ollama models, hybrid retrieval 
 - **FastAPI Backend Services** — Modular APIs for document processing, retrieval, model orchestration, and streaming.
 - **Extensible Architecture** — Easily integrate additional models, retrievers, rerankers, and vector databases.
 - **Fully Local Deployment** — Operates entirely on local hardware without reliance on external cloud services.
+
+---
+
+## **System Requirements**
+
+RagFlow is designed to run entirely on local hardware. The following specifications are recommended for a smooth experience.
+
+| Component | Minimum | Recommended |
+|------------|------------|------------|
+| Operating System | Windows 10, Ubuntu 22.04+, macOS 13+ | Windows 11, Ubuntu 24.04+ |
+| Python | 3.10+ | 3.11+ |
+| Node.js | 18+ | 20+ |
+| RAM | 8 GB | 16 GB+ |
+| CPU | 4 Cores | 8+ Cores |
+| GPU | Optional | NVIDIA GPU with 4GB+ VRAM |
+| Storage | 5 GB Free Space | 20 GB+ SSD |
+| Ollama | Latest Version | Latest Version |
+
+### Tested Configuration
+
+```text
+OS          : Windows 11
+CPU         : Intel Core i5
+RAM         : 16 GB
+GPU         : NVIDIA RTX 3050 (4GB)
+Python      : 3.12
+Node.js     : 22+
+Ollama      : Latest
+```
+
+### Supported Models
+
+| Category | Example Models |
+|------------|------------|
+| Chat Models | qwen2.5:3b, llama3.2, mistral, gemma |
+| Embedding Models | nomic-embed-text, mxbai-embed-large |
+
+> Larger models may require additional RAM and GPU memory depending on model size and context length.
 
 ---
 
@@ -205,8 +258,6 @@ UPLOAD_DIR=app/storage/uploads
 
 ```bash
 cd RagFlow_UI
-
-
 npm install
 npm run dev (if want to start frontend separately otherwise skip to "Running RagFlow" section)
 ```
@@ -220,7 +271,7 @@ http://127.0.0.1:3000
 > Ensure the RagFlow backend is running before starting the frontend.
 ---
 
-## Running RagFlow
+## **Running RagFlow**
 
 You can run RagFlow in two ways.
 
@@ -288,7 +339,7 @@ This is the easiest way to run RagFlow during development.
 
 ---
 
-## Use RagFlow UI
+## **Use RagFlow UI**
 
 1. Launch RagFlow UI url: http://127.0.0.1:3000
 2 .Go to settings and set the backend API URL if you are not running the backend on `http://127.0.0.1:8000` or just hit the connect and check if the connection sucessful.if connection is ok the the ui should show online and all models details in the model selection dropdown.
@@ -320,32 +371,121 @@ All processing runs locally, ensuring complete privacy and offline operation.
 	- RAG code: [backend/app/rag/](backend/app/rag/)
 - **RagFlow_UI/** — Vite + React frontend. See [RagFlow_UI/src/start.ts](RagFlow_UI/src/start.ts#L1)
 
-## **Architecture Overview**
-- Ingestion: upload PDFs via the upload API and chunk them for embeddings.
-- Embeddings: created via `backend/app/rag/embeddings.py` (pluggable providers).
-- Vector store: local FAISS-backed store in `backend/app/rag/vector_store.py`.
-- Retrieval: hybrid retrieval + BM25 + reranking for better relevance.
-- Serving: FastAPI exposes chat, document, model and session APIs consumed by the UI.
+---
 
 ## **Configuration & Environment**
-- Use `.env` files or environment variables for model endpoints, API keys, and storage paths.
-- Common knobs: model provider (Ollama vs local HF), embedding model name, FAISS index path.
 
-## **Development Tips**
-- Rebuild embeddings or vectors if you change chunking or the embedding model.
-- Use the OpenAPI docs at `/docs` to explore and test endpoints quickly.
-- Frontend and backend can run concurrently during development.
+RagFlow uses environment variables for model configuration, storage locations, and runtime settings.
+
+Create a `.env` file in the backend root directory:
+
+```env
+OLLAMA_MODEL=qwen2.5:3b
+EMBED_MODEL=nomic-embed-text
+
+VECTOR_PATH=app/storage/vectors/faiss.index
+METADATA_PATH=app/storage/vectors/metadata.pkl
+
+UPLOAD_DIR=app/storage/uploads
+```
+
+### Runtime Configuration
+
+The following settings can be adjusted directly from the UI or via the Settings API:
+
+| Setting | Description |
+|----------|------------|
+| `temperature` | Controls response creativity and randomness |
+| `top_k` | Number of retrieved chunks before reranking |
+| `rerank_top_k` | Number of chunks retained after reranking |
+| `max_tokens` | Maximum response length |
+
+> Model selection is handled dynamically through Ollama, allowing seamless switching between installed local models without restarting the application.
+
+## Development Tips
+
+- Ensure Ollama is running before starting the backend.
+- Re-index documents after changing the embedding model or chunking strategy.
+- Use the FastAPI Swagger UI (`/docs`) to explore and test API endpoints.
+- Monitor retrieval quality by adjusting `top_k`, `rerank_top_k`, and `temperature` settings.
+- Frontend and backend can be developed and run independently during development.
+- Use the document management panel to upload, delete, and re-index knowledge base documents.
+- Check the system monitoring dashboard to track CPU, GPU, RAM, and model utilization.
+- Use streaming chat endpoints for a more responsive user experience.
+
+--- 
 
 ## **Contributing**
 - Fork, make changes on a feature branch and open a PR. Keep changes focused and testable.
 - Add docs to `backend/README.md` or `RagFlow_UI/README.md` for large features.
 
-## **Troubleshooting**
-- Missing Python packages: ensure virtualenv is activated and `pip install -r backend/requirements.txt` succeeded.
-- GPU issues: several optional packages (PyTorch, FAISS-gpu) are pinned to CPU builds by default — consult `backend/requirements.txt`.
+---
 
-## **License**
-This project is provided under the MIT License. Modify as needed for your use.
+## **Troubleshooting**
+
+| Issue | Solution |
+|---------|----------|
+| Ollama model not found | Ensure Ollama is installed and the required models have been pulled using `ollama pull <model-name>`. |
+| Backend fails to start | Verify the virtual environment is activated and dependencies are installed with `pip install -r requirements.txt`. |
+| Frontend cannot connect to backend | Confirm the FastAPI server is running and the API URL is correctly configured. |
+| No results returned from documents | Ensure documents have been uploaded and indexed successfully. |
+| Changes to embedding model not reflected | Clear existing documents and re-index the knowledge base after changing embedding models. |
+| PDF deletion or indexing issues | Restart the backend and verify the storage directories have proper read/write permissions. |
+| Slow response times | Reduce `top_k`, `rerank_top_k`, or use a smaller Ollama model. |
+| High memory usage | Large documents and models may require additional RAM and storage resources. |
+| GPU not detected | Verify GPU drivers are installed and supported by your Ollama/PyTorch setup. |
+| API testing | Use the FastAPI Swagger UI available at `/docs` to inspect and test endpoints. |
 
 ---
-If you'd like, I can also: add CI badges, generate a short contributor guide, or update `backend/README.md` with step-by-step env var examples.
+
+## **Author**
+
+<div align="center">
+
+### Built with ❤️ by Rijwanool Karim
+
+Founder of **Wtero** • AI Engineer • Full-Stack Developer • Open Source Enthusiast
+
+<p>
+  <a href="https://github.com/A3x-parvez">
+    <img src="https://img.shields.io/badge/GitHub-A3x--parvez-black?style=for-the-badge&logo=github" />
+  </a>
+  
+  <a href="https://www.linkedin.com/in/rijwanool-karim">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin" />
+  </a>
+
+  <a href="https://rijwanool-karim.vercel.app/" target="_blank">
+	<img src="https://img.shields.io/badge/Portfolio-Visit%20Website-8B5CF6?style=for-the-badge&logo=vercel&logoColor=white" />
+	</a>
+  
+  <a href="https://wtero.com">
+    <img src="https://img.shields.io/badge/Wtero-Official%20Website-8B5CF6?style=for-the-badge" />
+  </a>
+</p>
+
+Building privacy-first AI products, local LLM solutions, intelligent automation systems, and modern developer tools.
+
+**RagFlow** is part of the Wtero ecosystem focused on accessible, offline, and secure AI experiences.
+
+</div>
+
+---
+
+### Support the Project
+
+If you find RagFlow useful:
+
+- ⭐ Star the repository
+- 🐛 Report bugs and suggest features
+- 🔀 Submit pull requests
+- 📢 Share the project with others
+
+Your support helps improve the project and future open-source AI tools.
+
+
+## **License**
+
+Distributed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+
+---
